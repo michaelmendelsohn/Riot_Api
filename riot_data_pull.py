@@ -1,7 +1,5 @@
-
-api_key='RGAPI-f8971a64-c2f9-4a01-a35d-c7b3ffb66446'
-
 from riotwatcher import LolWatcher, ApiError
+from general import api_key
 import pandas as pd
 
 # golbal variables
