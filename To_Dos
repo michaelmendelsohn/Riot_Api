@@ -1,0 +1,15 @@
+Easier
+1. Change win column from True/False to 1/0.
+ 
+2. Query Stats specifically when kevin and I are bot lane together.
+
+3. Allow querying match data by date or beginning date or whatever. figure that stuff out.
+
+4. Add a column with the date of the game.
+
+5. speed up role classification function.
+
+6. Speed Up data pull
+ - Instead of pulling from csv, i should use the getMatchHIstory function in my data pull.
+
+Harder
