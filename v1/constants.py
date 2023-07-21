@@ -13,5 +13,5 @@ def get_spells(lol_watcher):
 def get_queues():
     with open('queues.json') as user_file:
         queue_json = json.load(user_file)
-    return { queue['queueId'] : queue['description'] for queue in queue_json['queues_list']}
+    return { str(queue['queueId']) : queue['description'] for queue in queue_json['queues_list']}
     
