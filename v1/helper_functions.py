@@ -1,6 +1,8 @@
 import mysql.connector
 from sqlalchemy import create_engine
 import constants
+import pandas as pd
+from datetime import datetime
 
 def create_mysql_engine (user = 'root', password = 'iamgroot482', port = '3306',
                          host = '127.0.0.1', database = 'world'):
@@ -32,8 +34,10 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
 
 
     #remove the challenge and perk info, we don't care about that shit. keep everything else
-    [match_info['participants'][i].pop('perks') for i in range(len(match_info['participants'])) ]
-    [match_info['participants'][i].pop('challenges') for i in range(len(match_info['participants'])) ]
+    if 'perks' in match_info['participants'][0].keys():
+        [match_info['participants'][i].pop('perks') for i in range(len(match_info['participants'])) ]
+    if 'challenges' in match_info['participants'][0].keys():
+        [match_info['participants'][i].pop('challenges') for i in range(len(match_info['participants'])) ]
 
     #Turn the data into a DF format
     df = pd.DataFrame(data=match_info['participants'], columns = list(match_info['participants'][0].keys()))
@@ -46,7 +50,6 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
     match_time = datetime.fromtimestamp(int(match['info']['gameCreation']/1000))
     df['gameCreationDate'] = [match_time for i in range(df_length)]
     df['queueId'] = [match['info']['queueId'] for i in range(df_length)]
-
 
     # convert the Ids to Strings
     df['winFlag'] =  df['win'].apply(str).map({'True':1, 'False':0})
@@ -62,3 +65,30 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
     df['queueName'] = df['queueId'].apply(str).map(queues_dict)
 
     return df
+
+def slurp_match_timeline(lol_watcher, match_id, region='na1'):
+    timeline = lol_watcher.match.timeline_by_match(region, match_id)
+    match_timeline = lol_watcher.match.timeline_by_match(region, match_id)['info']
+    l = len(match_timeline['frames'])
+
+    data_fields = ['participantId','totalGold','level','xp','minionsKilled',
+                   'jungleMinionsKilled','totalDamageDoneToChampions','posX','posY']
+    col_names = ['matchId', 'minute'] + data_fields
+
+    list_of_lists_timeline = []
+    for i in range(l): #loops thru minutes
+        for j in match_timeline['frames'][i]['participantFrames']: #loops thru champions
+            champ_data=[match_id, i,
+                            match_timeline['frames'][i]['participantFrames'][j][data_fields[0]],
+                            match_timeline['frames'][i]['participantFrames'][j][data_fields[1]],
+                            match_timeline['frames'][i]['participantFrames'][j][data_fields[2]],
+                            match_timeline['frames'][i]['participantFrames'][j][data_fields[3]],
+                            match_timeline['frames'][i]['participantFrames'][j][data_fields[4]],
+                            match_timeline['frames'][i]['participantFrames'][j][data_fields[5]],
+                            match_timeline['frames'][i]['participantFrames'][j]['damageStats'][data_fields[6]],
+                            match_timeline['frames'][i]['participantFrames'][j]['position']['x'],
+                            match_timeline['frames'][i]['participantFrames'][j]['position']['y']]
+            list_of_lists_timeline.append(champ_data)
+
+    match_timeline_df = pd.DataFrame(list_of_lists_timeline, columns = col_names)
+    return match_timeline_df
