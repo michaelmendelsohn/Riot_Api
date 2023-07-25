@@ -71,13 +71,15 @@ def slurp_match_timeline(lol_watcher, match_id, region='na1'):
     match_timeline = lol_watcher.match.timeline_by_match(region, match_id)['info']
     l = len(match_timeline['frames'])
 
-    data_fields = ['participantId','totalGold','level','xp','minionsKilled','jungleMinionsKilled','totalDamageDoneToChampions','posX','posY']
-    col_names = ['minute'] + data_fields
+    data_fields = ['participantId','totalGold','level','xp','minionsKilled',
+                   'jungleMinionsKilled','totalDamageDoneToChampions','posX','posY']
+    col_names = ['matchId', 'minute'] + data_fields
 
     list_of_lists_timeline = []
     for i in range(l): #loops thru minutes
-        for j in match_timeline['frames'][i]['participantFrames']:#loops thru champions
-            champ_data=[i,  match_timeline['frames'][i]['participantFrames'][j][data_fields[0]],
+        for j in match_timeline['frames'][i]['participantFrames']: #loops thru champions
+            champ_data=[match_id, i,
+                            match_timeline['frames'][i]['participantFrames'][j][data_fields[0]],
                             match_timeline['frames'][i]['participantFrames'][j][data_fields[1]],
                             match_timeline['frames'][i]['participantFrames'][j][data_fields[2]],
                             match_timeline['frames'][i]['participantFrames'][j][data_fields[3]],
