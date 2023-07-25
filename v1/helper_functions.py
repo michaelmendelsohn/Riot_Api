@@ -1,6 +1,8 @@
 import mysql.connector
 from sqlalchemy import create_engine
 import constants
+import pandas as pd
+from datetime import datetime
 
 def create_mysql_engine (user = 'root', password = 'iamgroot482', port = '3306',
                          host = '127.0.0.1', database = 'world'):
@@ -32,8 +34,10 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
 
 
     #remove the challenge and perk info, we don't care about that shit. keep everything else
-    [match_info['participants'][i].pop('perks') for i in range(len(match_info['participants'])) ]
-    [match_info['participants'][i].pop('challenges') for i in range(len(match_info['participants'])) ]
+    if 'perks' in match_info['participants'][0].keys():
+        [match_info['participants'][i].pop('perks') for i in range(len(match_info['participants'])) ]
+    if 'challenges' in match_info['participants'][0].keys():
+        [match_info['participants'][i].pop('challenges') for i in range(len(match_info['participants'])) ]
 
     #Turn the data into a DF format
     df = pd.DataFrame(data=match_info['participants'], columns = list(match_info['participants'][0].keys()))
