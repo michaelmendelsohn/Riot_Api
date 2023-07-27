@@ -92,3 +92,20 @@ def slurp_match_timeline(lol_watcher, match_id, region='na1'):
 
     match_timeline_df = pd.DataFrame(list_of_lists_timeline, columns = col_names)
     return match_timeline_df
+
+def slurp_data(lol_watcher, match_id, table_name, region='na1'):
+    if table_name == 'lol_match_details':
+        return slurp_match_details(lol_watcher, match_id, region='na1')
+    elif table_name == 'lol_match_timeline':
+        return slurp_match_timeline(lol_watcher, match_id, region='na1')
+    else:
+        print("invalid table_name provided. Current optinos are 'lol_match_details', or 'lol_match_timeline'.")
+        return None
+    
+def find_to_slurp(summoner_name, lol_watcher, table_name, db_engine, region = 'na1'):
+    
+    match_list = get_matchlist_by_summoner_name(summoner_name, lol_watcher, region = region)
+    match_id_df = pd.read_sql(f'SELECT distinct matchid FROM {table_name}', con=db_engine)
+    already_slurped_match_list = list(match_id_df.matchid)
+    
+    return [match for match in match_list if match not in already_slurped_match_list]
