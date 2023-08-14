@@ -4,6 +4,7 @@ import constants
 import pandas as pd
 from datetime import datetime
 
+# Create mysql engine to be used to upload to my local mysql DB
 def create_mysql_engine (user = 'root', password = 'iamgroot482', port = '3306',
                          host = '127.0.0.1', database = 'riot_api'):
 
