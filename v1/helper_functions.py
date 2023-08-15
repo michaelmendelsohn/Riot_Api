@@ -155,7 +155,7 @@ def collect_riot_api_data(summoner_name, lol_watcher, table_name, db_engine, reg
     with concurrent.futures.ThreadPoolExecutor(max_workers = num_worker_threads) as executor:
         to_slurp = to_slurp[:match_upload_limit]
         futures = [ executor.submit(worker, match_id) for match_id in to_slurp ]
-
+        # haha exd 
         try: 
             for future in concurrent.futures.as_completed(futures):
                 future.result()
