@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 import constants
 import pandas as pd
 from datetime import datetime
+import concurrent.futures
 
 # Create mysql engine to be used to upload to my local mysql DB
 def create_mysql_engine (user = 'root', password = 'iamgroot482', port = '3306',
@@ -138,13 +139,13 @@ def find_to_slurp(summoner_name, lol_watcher, table_name, db_engine, region = 'n
 ## region (string) - Region account is in. Defaults to NA
 def collect_riot_api_data(summoner_name, lol_watcher, table_name, db_engine, region='na1', num_worker_threads=4, match_upload_limit=20):
     # First We run find_to_slurp to avoid pulling data for matches we have already pulled
-    to_slurp = help.find_to_slurp(summoner_name, lol_watcher, table_name, db_engine)
-
+    to_slurp = find_to_slurp(summoner_name, lol_watcher, table_name, db_engine)
+    print (f'{len(to_slurp)} matches to slurp!')
     # Next we use slurp_data to pull the data from Riot API
     # Set Up multiprocessing for this later
 
     def worker (match_id):
-        df_to_upload = help.slurp_data(lol_watcher, match_id, table_name, region=region)
+        df_to_upload = slurp_data(lol_watcher, match_id, table_name, region=region)
         if df_to_upload is not None:
             df_to_upload.to_sql(con=db_engine, name=table_name, if_exists='append', index = False)
             print(f"Uploaded match id {match_id} {table_name} data.")
