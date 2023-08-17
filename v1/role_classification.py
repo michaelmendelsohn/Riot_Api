@@ -31,7 +31,7 @@ def find_to_classify(db_engine):
 
 def classify_jungler(match_list_to_classify, db_engine):
     
-    if len (match_list_to_classify)==0:
+    if len (match_list_to_classify)<2:
         print('empty list to classify')
         return None
     
@@ -69,7 +69,8 @@ def classify_support(match_list_to_classify, db_engine):
                        'Talisman of Ascension', "Targon's Brace", 'Ancient Coin', "Nomad's Medallion"]
     supp_items = [item.lower() for item in current_supp_items + past_supp_items]
 
-    if len (match_list_to_classify)==0:
+    #SQL needs 2 to pull with proper syntax
+    if len (match_list_to_classify)<2:
         print('empty list to classify')
         return None
     
@@ -118,7 +119,7 @@ def classify_position(x,y):
 
 def classify_roles_by_position(match_list_to_classify, db_engine, minutes_to_pull = [3,4,5,6,7,8]):
     
-    if len (match_list_to_classify)==0:
+    if len (match_list_to_classify)<2:
         print('empty list to classify')
         return None
     else:
@@ -168,8 +169,8 @@ def determine_roles(db_engine):
 
     to_classify = find_to_classify(db_engine)
     print(len(to_classify))
-    if len(to_classify) == 0:
-        print('No roles to classify')
+    if len(to_classify) <2:
+        print('Not enough roles to classify')
     else:
         jung = classify_jungler(to_classify, db_engine)
         supp = classify_support(to_classify, db_engine)
