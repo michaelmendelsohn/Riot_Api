@@ -64,6 +64,7 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
         # convert the Ids to Strings
         df['winFlag'] =  df['win'].apply(str).map({'True':1, 'False':0})
         df['teamName'] = df['teamId'].apply(str).map({'100':'Blue', '200':'Red'})
+        df['item0Name'] = df['item0'].apply(str).map(item_dict)
         df['item1Name'] = df['item1'].apply(str).map(item_dict)
         df['item2Name'] = df['item2'].apply(str).map(item_dict)
         df['item3Name'] = df['item3'].apply(str).map(item_dict)
@@ -113,6 +114,7 @@ def slurp_match_timeline(lol_watcher, match_id, region='na1'):
 
 # Calls appropriate slurp function for either match_details or match_timeline
 def slurp_data(lol_watcher, match_id, table_name, region='na1'):
+   
     if table_name == 'lol_match_details':
         return slurp_match_details(lol_watcher, match_id, region='na1')
     elif table_name == 'lol_match_timeline':
@@ -161,3 +163,18 @@ def collect_riot_api_data(summoner_name, lol_watcher, table_name, db_engine, reg
                 future.result()
         except Exception as e:
             print(f"Exception {e} thrown. Cancelling futures.")
+
+
+# Finds list of match_ids we still need to slurp for specified table_name
+def find_to_classify(db_engine):
+    
+    query=f""" 
+            SELECT 
+                distinct matchId
+            FROM  riot_api.lol_match_details  
+            where matchId not in (select distinct matchId from riot_api.lol_match_roles)
+                  and queueName in ('5v5 Ranked Flex games', '5v5 Ranked Solo games',
+                                    '5v5 Draft Pick games', '5v5 Blind Pick games',
+                                    'Clash games') """
+    df = pd.read_sql(query, con=db_engine)
+    return list(df.matchId)
