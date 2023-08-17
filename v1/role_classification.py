@@ -1,5 +1,26 @@
 import pandas as pd
+import numpy as np
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
+top_area=Polygon([(0,16000),(0,6000),(3950,6000),(4800,11700),(11000,12500),(11000,16000)])
+mid_area=Polygon([(6000,3700),(9500,5000),(11500,7500),(12500,10500),(10500,12000),(7000,10500),(5000,9000),(4200,6000)])
+bot_area=Polygon([(16000,0),(6000,0),(6000,3500),(12000,4000),(13000,10000),(16000,10000)])
+
+
+# Finds list of match_ids we still need to slurp for specified table_name
+def find_to_classify(db_engine):
+    
+    query=f""" 
+            SELECT 
+                distinct matchId
+            FROM  riot_api.lol_match_details  
+            where matchId not in (select distinct matchId from riot_api.lol_match_roles)
+                  and queueName in ('5v5 Ranked Flex games', '5v5 Ranked Solo games',
+                                    '5v5 Draft Pick games', '5v5 Blind Pick games',
+                                    'Clash games') """
+    df = pd.read_sql(query, con=db_engine)
+    return list(df.matchId)
 
 def classify_jungler(match_list_to_classify, db_engine):
     
@@ -65,3 +86,39 @@ def classify_support(match_list_to_classify, db_engine):
             df2.loc[index,'support_flag'] = False
 
     return df2[['matchid','teamName','participantid','support_flag']]
+
+
+def classify_position(x,y):
+    pt = Point(x,y)
+    if bot_area.contains(pt):
+        return "BOTTOM"
+    elif mid_area.contains(pt):
+        return "MIDDLE"
+    elif top_area.contains(pt):
+        return "TOP"
+    else:
+        return "None"
+
+def classify_roles_by_position(match_list_to_classify, db_engine, minutes_to_pull = [3,4,5,6,7,8]):
+    query=f"""      SELECT 
+                        matchid,
+                        participantid,
+                        minute,
+                        posX,
+                        posY
+                    FROM riot_api.lol_match_timeline
+                    where matchId in {tuple(match_list_to_classify)} and minute in {tuple(minutes_to_pull)} """
+    df = pd.read_sql(query, con=db_engine)
+
+    df['pos_lane'] = np.vectorize(classify_position)(df['posX'], df['posY'])
+    position_flag_df=df.groupby(['matchid','participantid'])['pos_lane'].agg(lambda x:x.value_counts().index[0])
+    return position_flag_df.reset_index()
+
+# used with np.vectorize function
+def define_role(jung, supp, poslane):
+    if jung:
+        return 'JUNGLE'
+    elif supp:
+        return 'SUPPORT'
+    else:
+        return poslane
