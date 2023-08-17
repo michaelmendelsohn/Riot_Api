@@ -37,6 +37,7 @@ def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], t
 
     df_compare = df_home.merge(df_away, how='inner', left_on = ['matchId','role','minute','queueName','gameCreationDate'],
                                                     right_on = ['matchId','role','minute','queueName','gameCreationDate'])
+    
     df_compare['cs_diff'] = df_compare['totalCS_x'] - df_compare['totalCS_y']
     df_compare['xp_diff'] = df_compare['xp_x'] - df_compare['xp_y']
     df_compare['gold_diff'] = df_compare['totalGold_x'] - df_compare['totalGold_y']
