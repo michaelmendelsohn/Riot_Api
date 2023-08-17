@@ -4,7 +4,6 @@ import pandas as pd
 def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], teammates_names = []):
     teammates_where_sql = "".join([f""" and lower(summonerNameList) LIKE '%{name}%' """ for name in [i.lower() for i in teammates_names]])
 
-    teammates_sql_string = f"""('{"', '".join(summ_names)}')"""
     query=f"""      
     SELECT
         det.matchId,
@@ -18,6 +17,7 @@ def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], t
         det.gameCreationDate,
         time.minute,
         time.participantId,
+        time.totalGold,
         time.xp,
         time.minionsKilled,
         time.jungleMinionsKilled,
@@ -37,4 +37,9 @@ def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], t
 
     df_compare = df_home.merge(df_away, how='inner', left_on = ['matchId','role','minute','queueName','gameCreationDate'],
                                                     right_on = ['matchId','role','minute','queueName','gameCreationDate'])
+    df_compare['cs_diff'] = df_compare['totalCS_x'] - df_compare['totalCS_y']
+    df_compare['xp_diff'] = df_compare['xp_x'] - df_compare['xp_y']
+    df_compare['gold_diff'] = df_compare['totalGold_x'] - df_compare['totalGold_y']
+    df_compare['dmg_diff'] = df_compare['totalDamageDoneToChampions_x'] - df_compare['totalDamageDoneToChampions_y']
+
     return df_compare
