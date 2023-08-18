@@ -47,12 +47,17 @@ def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], t
 
 def stats_at_min(summoner_name, role, db_engine, minutes_to_analyse =[14], teammates_names=[],
                  beg_timestamp= pd.Timestamp('2019-01-01 15:48:49'), end_timestamp= pd.Timestamp('2025-12-31 15:48:49'), ):
-    df = af.prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = minutes_to_analyse, teammates_names = teammates_names)
+    summoner_name = summoner_name.lower()
+    df = prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = minutes_to_analyse, teammates_names = teammates_names)
     cols=['role','championName_x','championName_y','winFlag_x','minute','cs_diff','xp_diff','gold_diff','dmg_diff']
-    mid_df_10 = df[(df.summonerName_x==summoner_name) & (df.role==role) &
-                   (df.gameCreationDate > beg_timestamp) &
-                   (df.gameCreationDate < end_timestamp)][cols]
-    
+    if role == 'ALL ROLES':
+        mid_df_10 = df[(df.summonerName_x==summoner_name) &
+                    (df.gameCreationDate > beg_timestamp) &
+                    (df.gameCreationDate < end_timestamp)][cols]
+    else:
+        mid_df_10 = df[(df.summonerName_x==summoner_name) & (df.role==role) &
+                    (df.gameCreationDate > beg_timestamp) &
+                    (df.gameCreationDate < end_timestamp)][cols]
     agg_types={'championName_y':'count','winFlag_x':'mean', 'cs_diff':'mean','xp_diff':'mean', 'gold_diff':'mean', 'dmg_diff':'mean' }
     rename_dict = {'championName_y':'Games', 'winFlag_x':'Winrate', 'cs_diff':'CS_Diff@14', 'xp_diff':'XP_Diff@14', 'gold_diff':'Gold_Diff@14', 'dmg_diff':'DMG_Diff@14'}
     x=mid_df_10.groupby('championName_x', as_index=False,).agg(agg_types).rename(columns=rename_dict).sort_values(by='Games', ascending=False)
