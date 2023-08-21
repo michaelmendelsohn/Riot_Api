@@ -2,8 +2,6 @@ import streamlit as st
 import os
 import sys
 
-sys.path.insert(0, '/Users/mmend/OneDrive/riot_api_git_clone_folder/Riot_Api/v1/')
- 
 import analysis_functions as af 
 import helper_functions as help
 
