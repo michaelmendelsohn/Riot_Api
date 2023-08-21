@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-import sys
 
 import analysis_functions as af 
 import helper_functions as help
