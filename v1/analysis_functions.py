@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], teammates_names = []):
-    teammates_where_sql = "".join([f""" and lower(summonerNameList) LIKE '%{name}%' """ for name in [i.lower() for i in teammates_names]])
+    #teammates_where_sql = "".join([f""" and lower(summonerNameList) LIKE '%{name}%' """ for name in [i.lower() for i in teammates_names]])
     minutes_where_sql = ",".join([str(i) for i in minutes_to_analyse])
     query=f"""      
     SELECT
@@ -29,8 +29,8 @@ def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], t
     INNER JOIN (select distinct matchid, teamName, group_concat(summonerName, '') as summonerNameList FROM riot_api.lol_match_details group by 1,2) summoner_basis
                 on det.matchid = summoner_basis.matchid
 
-    where rol.validRole = 1 and minute in ({minutes_where_sql}) and lower(summonerNameList) LIKE '%{summoner_name.lower()}%' {teammates_where_sql}
-    """
+    where rol.validRole = 1 and minute in ({minutes_where_sql}) and lower(summonerNameList) LIKE '%{summoner_name.lower()}%' 
+    """ # {teammates_where_sql}
     df = pd.read_sql(query, con=db_engine)
     df_home = df[df['teamMate']==True]
     df_away = df[df['teamMate']==False]
@@ -46,7 +46,7 @@ def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], t
     return df_compare
 
 def stats_at_min(summoner_name, role, db_engine, minutes_to_analyse =[14], teammates_names=[],
-                 beg_timestamp= pd.Timestamp('2019-01-01 15:48:49'), end_timestamp= pd.Timestamp('2025-12-31 15:48:49'), ):
+                 beg_timestamp= pd.Timestamp('2018-01-01 15:48:49'), end_timestamp= pd.Timestamp('2025-12-31 15:48:49') ):
     summoner_name = summoner_name.lower()
     df = prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = minutes_to_analyse, teammates_names = teammates_names)
     cols=['role','championName_x','championName_y','winFlag_x','minute','cs_diff','xp_diff','gold_diff','dmg_diff']
