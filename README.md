@@ -1,30 +1,14 @@
 # Riot_Api
-Connecting to Riot's API for League of Legends data.
-
-1. Pull data using riot_data_pull
-2. Classify laners into proper positions using the role_classification_functions module. can use score_error to see how accuracte we are.
-3. Use data_analysis to calculate some statistics
-4. Experiment! Woo!
-
+Pulls and stores League of Legends data. Displays performance stats filterable by teammates & roles seen nowhere else. Soon to be a public streamlit app! mmendelsohn.streamlit.app
+Screenshots  of streamlit app:
 ------------------------
-
-to do for v1:
-
-
-1. get puuid for a summoner name - Summonerv4/by-name/summonername
-2. get list of match ids by puuid - Matchv5/ids
-3. Check database for which match ids i don't have - find_to_slurp
-4. Create a function that does the following
-- get match by match id - Matchv5/matchids
-    - Store in a DB
-- get match timeline by match id
-    - store in a DB
-5. Create concurrent processing that will speed this up
+ 
+![image](https://github.com/michaelmendelsohn/Riot_Api/assets/12532898/8cd56f0b-ccfb-4116-91be-15ce5d6a70ff)
+![image](https://github.com/michaelmendelsohn/Riot_Api/assets/12532898/869045c0-4403-44e3-b756-27d771d8420c)
 
 
 
-
-Database HierArchy
+Database Hierarchy
 
 
 - match_participant_view
