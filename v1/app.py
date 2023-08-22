@@ -81,7 +81,7 @@ with st.container():
     with right_col:
         if st.button("Go!"):
             teammates_string = " and ".join([f"{name} as {teammates_dict_without_main[name]}" for name in teammates_dict_without_main.keys()])
-            st.write(f"Pulling {summoner_name_0}'s {role_0} games {teammates_string}")
+            st.write(f"Pulling {summoner_name_0}'s {role_0} games with {teammates_string}.")
             display_stats(summoner_name_0, role_0, teammates_dict)
 
 # Lower Section Stats

@@ -60,13 +60,16 @@ def stats_at_min(summoner_name, role, db_engine, minutes_to_analyse =[14], teamm
                     (df.gameCreationDate < end_timestamp)][cols]
     agg_types={'championName_y':'count','winFlag_x':'mean', 'cs_diff':'mean','xp_diff':'mean', 'gold_diff':'mean', 'dmg_diff':'mean' }
     rename_dict = {'championName_y':'Games', 'winFlag_x':'Winrate', 'cs_diff':'CS_Diff@14', 'xp_diff':'XP_Diff@14', 'gold_diff':'Gold_Diff@14', 'dmg_diff':'DMG_Diff@14'}
-    x=mid_df_10.groupby('championName_x', as_index=False,).agg(agg_types).rename(columns=rename_dict).sort_values(by='Games', ascending=False)
-    format_dict={'Game': "{:.0f}",
-                    'Winrate': "{:.0%}",
-                    'CS_Diff@14': "{:.0f}",
-                    'XP_Diff@14': "{:.0f}",
-                    'Gold_Diff@14': "{:.0f}",
-                    'DMG_Diff@14': "{:.0f}"}
+    x=mid_df_10.groupby('championName_x', as_index=False,).agg(agg_types).rename(columns=rename_dict)
+    n_games = x.Games.sum()
+    total_row = ['Total', n_games,  x.Games.dot(x.Winrate)/n_games,
+                                    x.Games.dot(x['CS_Diff@14'])/n_games,
+                                    x.Games.dot(x['XP_Diff@14'])/n_games,
+                                    x.Games.dot(x['Gold_Diff@14'])/n_games,
+                                    x.Games.dot(x['DMG_Diff@14'])/n_games
+                ]
+    x.loc[len(x)] = total_row
+    x.sort_values(by='Games', ascending=False, inplace=True)
     return x.style.format(format_dict)
 
 def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_dict, minutes_to_analyse =[14],
@@ -89,7 +92,16 @@ def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_d
 
     agg_types={'championName_y':'count','winFlag_x':'mean', 'cs_diff':'mean','xp_diff':'mean', 'gold_diff':'mean', 'dmg_diff':'mean' }
     rename_dict = {'championName_y':'Games', 'winFlag_x':'Winrate', 'cs_diff':'CS_Diff@14', 'xp_diff':'XP_Diff@14', 'gold_diff':'Gold_Diff@14', 'dmg_diff':'DMG_Diff@14'}
-    aggregated_df=processed_df.groupby('championName_x', as_index=False,).agg(agg_types).rename(columns=rename_dict).sort_values(by='Games', ascending=False)
+    aggregated_df=processed_df.groupby('championName_x', as_index=False,).agg(agg_types).rename(columns=rename_dict)
+    n_games = aggregated_df.Games.sum()
+    total_row = ['Total', n_games,  aggregated_df.Games.dot(aggregated_df.Winrate)/n_games,
+                                    aggregated_df.Games.dot(aggregated_df['CS_Diff@14'])/n_games,
+                                    aggregated_df.Games.dot(aggregated_df['XP_Diff@14'])/n_games,
+                                    aggregated_df.Games.dot(aggregated_df['Gold_Diff@14'])/n_games,
+                                    aggregated_df.Games.dot(aggregated_df['DMG_Diff@14'])/n_games
+    ]
+    aggregated_df.loc[len(aggregated_df)] = total_row
+    aggregated_df.sort_values(by='Games', ascending=False, inplace=True)
     format_dict={'Game': "{:.0f}",
                     'Winrate': "{:.0%}",
                     'CS_Diff@14': "{:.0f}",
