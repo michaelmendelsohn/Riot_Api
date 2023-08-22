@@ -58,8 +58,10 @@ with st.container():
                           summoner_name_2:role_2,
                           summoner_name_3:role_3,
                           summoner_name_4:role_4}
+        teammates_dict.pop("")
         teammates_dict_without_main = teammates_dict.copy()
-        teammates_dict_without_main.pop(summoner_name_0)
+        if not summoner_name_0 == "":
+            teammates_dict_without_main.pop(summoner_name_0)
 
         if st.button(f"Pull New Data for {summoner_name_0}"):
             num_threads = 4
@@ -75,7 +77,6 @@ with st.container():
         if st.button("Go!"):
             teammates_string = " and ".join([f"{name} as {teammates_dict_without_main[name]}" for name in teammates_dict_without_main.keys()])
             st.write(f"Pulling {summoner_name_0}'s {role_0} games {teammates_string}")
-            st.write(teammates_dict)
             display_stats(summoner_name_0, role_0, teammates_dict)
 
 # Lower Section Stats
