@@ -7,7 +7,7 @@ Pulls and stores League of Legends data. Displays performance stats filterable b
 
 
 
-Database HierArchy
+Database Hierarchy
 
 
 - match_participant_view
