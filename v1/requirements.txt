@@ -8,3 +8,4 @@ sqlalchemy
 constants
 datetime
 concurrent
+riotwatcher
