@@ -5,3 +5,4 @@ riotwatcher==3.2.5
 Shapely==2.0.1
 SQLAlchemy==2.0.19
 streamlit==1.25.0
+_version
