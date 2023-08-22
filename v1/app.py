@@ -1,10 +1,10 @@
 import streamlit as st
 import os
-
+import mysql
 import analysis_functions as af 
 import helper_functions as help
 import role_classification as rc
-import mysql
+
 from riotwatcher import LolWatcher
 
 _RIOT_API_KEY='RGAPI-df355d03-837c-43cc-a40a-b70885e04bd3'
