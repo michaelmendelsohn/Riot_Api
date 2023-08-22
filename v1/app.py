@@ -3,7 +3,7 @@ import os
 import mysql
 
 import analysis_functions as af 
-xsss=2
+
 import helper_functions as help
 import role_classification as rc
 
@@ -62,7 +62,8 @@ with st.container():
                           summoner_name_2:role_2,
                           summoner_name_3:role_3,
                           summoner_name_4:role_4}
-        teammates_dict.pop("")
+        if "" in teammates_dict.keys():
+            teammates_dict.pop("")
         teammates_dict_without_main = teammates_dict.copy()
         if not summoner_name_0 == "":
             teammates_dict_without_main.pop(summoner_name_0)
