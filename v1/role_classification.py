@@ -31,10 +31,11 @@ def find_to_classify(db_engine):
 
 def classify_jungler(match_list_to_classify, db_engine):
     
-    if len (match_list_to_classify)<2:
-        print('empty list to classify')
-        return None
+    match_list_where_sql = "'" + "','".join([str(i) for i in match_list_to_classify]) + "'"
     
+    if len (match_list_to_classify)<1:
+        print('empty list to classify')
+        return None  
     else:
         query=f"""  SELECT 
                         matchid,
@@ -43,7 +44,7 @@ def classify_jungler(match_list_to_classify, db_engine):
                         neutralMinionsKilled as totaljungleMinionsKilled,
                         lower(concat( coalesce(summoner1Name, ''),  ' ', coalesce(summoner2Name,'') )) as summonerSpells
                     FROM riot_api.lol_match_details
-                    where matchId in {tuple(match_list_to_classify)} """
+                    where matchId in ({match_list_where_sql})  """
         df = pd.read_sql(query, con=db_engine)
 
         df['jungle_flag'] = [True if 'smite' in spells else False  for spells in df.summonerSpells ]
@@ -69,8 +70,9 @@ def classify_support(match_list_to_classify, db_engine):
                        'Talisman of Ascension', "Targon's Brace", 'Ancient Coin', "Nomad's Medallion"]
     supp_items = [item.lower() for item in current_supp_items + past_supp_items]
 
+    match_list_where_sql = "'" + "','".join([str(i) for i in match_list_to_classify]) + "'"
     #SQL needs 2 to pull with proper syntax
-    if len (match_list_to_classify)<2:
+    if len (match_list_to_classify)<1:
         print('empty list to classify')
         return None
     
@@ -84,7 +86,7 @@ def classify_support(match_list_to_classify, db_engine):
                                         coalesce(item3Name,''),  ' ', coalesce(item4Name,''),  ' ',coalesce(item5Name,''), ' ',
                                         coalesce(item6Name,''))) as itemNames
                         FROM riot_api.lol_match_details 
-                        where matchId in {tuple(match_list_to_classify)} """
+                        where matchId in ({match_list_where_sql}) """
         df = pd.read_sql(query, con=db_engine)
 
         # Flag supports by the support item
@@ -119,7 +121,10 @@ def classify_position(x,y):
 
 def classify_roles_by_position(match_list_to_classify, db_engine, minutes_to_pull = [3,4,5,6,7,8]):
     
-    if len (match_list_to_classify)<2:
+    minutes_where_sql = ",".join([str(i) for i in minutes_to_pull])
+    match_list_where_sql = "'" + "','".join([str(i) for i in match_list_to_classify]) + "'"
+
+    if len (match_list_to_classify)<1:
         print('empty list to classify')
         return None
     else:
@@ -130,7 +135,7 @@ def classify_roles_by_position(match_list_to_classify, db_engine, minutes_to_pul
                             posX,
                             posY
                         FROM riot_api.lol_match_timeline
-                        where matchId in {tuple(match_list_to_classify)} and minute in {tuple(minutes_to_pull)} """
+                        where matchId in ({match_list_where_sql}) and minute in ({minutes_where_sql}) """
         df = pd.read_sql(query, con=db_engine)
 
         df['pos_lane'] = np.vectorize(classify_position)(df['posX'], df['posY'])
@@ -169,7 +174,7 @@ def determine_roles(db_engine):
 
     to_classify = find_to_classify(db_engine)
     print(len(to_classify))
-    if len(to_classify) <2:
+    if len(to_classify) <1:
         print('Not enough roles to classify')
     else:
         jung = classify_jungler(to_classify, db_engine)
