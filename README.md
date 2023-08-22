@@ -1,5 +1,5 @@
 # Riot_Api
-Pulls and stores League of Legends data. displays sick stats seen nowhere else(filtersble by teammates and roles). Now a streamlit app! mmendelsohn.streamlit.app
+Pulls and stores League of Legends data. displays sick stats seen nowhere else(filtersble by teammates and roles). Soon to be a streamlit app! mmendelsohn.streamlit.app
 ------------------------
  
 
