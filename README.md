@@ -1,5 +1,6 @@
 # Riot_Api
-Pulls and stores League of Legends data. Displays performance stats filterable by teammates & roles seen nowhere else. Soon to be a streamlit app! mmendelsohn.streamlit.app
+Pulls and stores League of Legends data. Displays performance stats filterable by teammates & roles seen nowhere else. Soon to be a public streamlit app! [mmendelsohn.streamlit.app](mmendelsohn.streamlit.app)
+Screenshots  of streamlit app:
 ------------------------
  
 ![image](https://github.com/michaelmendelsohn/Riot_Api/assets/12532898/8cd56f0b-ccfb-4116-91be-15ce5d6a70ff)
