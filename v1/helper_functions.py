@@ -8,7 +8,7 @@ import concurrent.futures
 # Create mysql engine to be used to upload to my local mysql DB
 def create_mysql_engine (user = 'root', password = 'iamgroot482', port = '3306',
                          host = '127.0.0.1', database = 'riot_api'):
-
+    #host = '192.168.50.32'
     url="mysql+mysqlconnector://{0}:{1}@{2}:{3}/{4}".format(
                 user, password, host, port, database
             )

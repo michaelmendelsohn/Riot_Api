@@ -9,7 +9,7 @@ import role_classification as rc
 
 from riotwatcher import LolWatcher
 
-_RIOT_API_KEY='RGAPI-df355d03-837c-43cc-a40a-b70885e04bd3'
+_RIOT_API_KEY='RGAPI-530dc2f5-6f18-414d-b0ac-0037d535622c'
 lol_watcher = LolWatcher(_RIOT_API_KEY)
 engine = help.create_mysql_engine()
 

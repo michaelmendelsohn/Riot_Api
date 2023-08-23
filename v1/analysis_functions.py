@@ -69,7 +69,7 @@ def stats_at_min(summoner_name, role, db_engine, minutes_to_analyse =[14], teamm
                                     x.Games.dot(x['DMG_Diff@14'])/n_games
                 ]
     x.loc[len(x)] = total_row
-    x.sort_values(by='Games', ascending=False, inplace=True)
+    x = x.sort_values(by='Games', ascending=False).reset_index(drop=True)
     format_dict={'Game': "{:.0f}",
                     'Winrate': "{:.0%}",
                     'CS_Diff@14': "{:.0f}",
@@ -101,7 +101,7 @@ def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_d
 
     if return_type != 'agg':
         rename_dict_2 = {'championName_y':'Enemy_Champion', 'championName_x':'Champion', 'winFlag_x':'Win'}
-        return processed_df.rename(columns=rename_dict_2).reset_index(drop=True).sort_values(by='gameCreationDate', ascending = False)
+        return processed_df.rename(columns=rename_dict_2).sort_values(by='gameCreationDate', ascending = False).reset_index(drop=True)
     else:
         processed_df.drop(['gameCreationDate'], axis=1, inplace=True)
         agg_types={'championName_y':'count','winFlag_x':'mean', 'cs_diff':'mean','xp_diff':'mean', 'gold_diff':'mean', 'dmg_diff':'mean' }
@@ -115,7 +115,7 @@ def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_d
                                         aggregated_df.Games.dot(aggregated_df['DMG_Diff@14'])/n_games
         ]
         aggregated_df.loc[len(aggregated_df)] = total_row
-        aggregated_df.sort_values(by='Games', ascending=False, inplace=True)
+        aggregated_df = aggregated_df.sort_values(by='Games', ascending=False).reset_index(drop=True)
         format_dict={'Game': "{:.0f}",
                         'Winrate': "{:.0%}",
                         'CS_Diff@14': "{:.0f}",
