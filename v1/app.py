@@ -9,7 +9,7 @@ import role_classification as rc
 
 from riotwatcher import LolWatcher
 
-_RIOT_API_KEY='RGAPI-df355d03-837c-43cc-a40a-b70885e04bd3'
+_RIOT_API_KEY='RGAPI-530dc2f5-6f18-414d-b0ac-0037d535622c'
 lol_watcher = LolWatcher(_RIOT_API_KEY)
 engine = help.create_mysql_engine()
 
@@ -24,10 +24,10 @@ with st.container(): # this is optional
 #     with open(filename) as f:
 #         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 # local_css("../style/style.css")
-def display_stats(main_summoner_name, role, teammates_dict):
+def display_stats(main_summoner_name, role, teammates_dict, return_type='agg'):
     engine = help.create_mysql_engine()
     #stats_df = af.stats_at_min(summoner_name, role, engine)
-    stats_df = af.stats_at_min_with_teammates(main_summoner_name, role, engine, teammates_dict)
+    stats_df = af.stats_at_min_with_teammates(main_summoner_name, role, engine, teammates_dict, return_type=return_type)
     st.write(stats_df)
     return
 
@@ -79,11 +79,18 @@ with st.container():
             rc.determine_roles(engine)
     
     with right_col:
-        if st.button("Go!"):
-            teammates_string = " and ".join([f"{name} as {teammates_dict_without_main[name]}" for name in teammates_dict_without_main.keys()])
-            st.write(f"Pulling {summoner_name_0}'s {role_0} games {teammates_string}")
+        if st.button("Go!", key='stats_go_button'):
+            
+            teammates_string = " and ".join([f" {name} as {teammates_dict_without_main[name]}" for name in teammates_dict_without_main.keys()])
+            if len(teammates_dict_without_main)>0:
+                conditional_with = ' with '
+            else:
+                conditional_with = ''
+            st.write(f"Pulling {summoner_name_0}'s {role_0} games{conditional_with}{teammates_string}.")
             display_stats(summoner_name_0, role_0, teammates_dict)
 
 # Lower Section Stats
 with st.container():
     st.write("---")
+    st.subheader("Game by Game data for the above aggregated stats")
+    display_stats(summoner_name_0, role_0, teammates_dict, return_type='underlying')
