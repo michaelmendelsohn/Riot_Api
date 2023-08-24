@@ -74,7 +74,10 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
         df['summoner1Name'] = df['summoner1Id'].apply(str).map(spell_dict)
         df['summoner2Name'] = df['summoner2Id'].apply(str).map(spell_dict)
         df['queueName'] = df['queueId'].apply(str).map(queues_dict)
-
+        
+        df.drop(columns=['allInPings', 'assistMePings', 'baitPings', 'basicPings', 'bountyLevel', 'championTransform', 'commandPings',
+                         'dangerPings', 'eligibleForProgression', 'enemyMissingPings', 'enemyVisionPings','getBackPings', 'holdPings',
+                         'needVisionPings', 'nexusKills', 'nexusLost', 'nexusTakedowns', 'onMyWayPings', 'visionClearedPings'], inplace=True)
         return df
 
 # Create DataFrame of Match Timeline Data for specified Match Id
@@ -110,6 +113,7 @@ def slurp_match_timeline(lol_watcher, match_id, region='na1'):
 
 
         match_timeline_df = pd.DataFrame(list_of_lists_timeline, columns = col_names)
+        match_timeline_df = match_timeline_df[match_timeline_df.minute.isin([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,20,25,30,35,40,45,50,55,60,65,70])]
         return match_timeline_df
 
 # Calls appropriate slurp function for either match_details or match_timeline
