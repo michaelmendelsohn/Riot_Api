@@ -82,7 +82,8 @@ def stats_at_min(summoner_name, role, db_engine, minutes_to_analyse =[14], teamm
         return x
 
 def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_dict, minutes_to_analyse =[14],
-                 beg_timestamp= pd.Timestamp('2018-01-01 15:48:49'), end_timestamp= pd.Timestamp('2025-12-31 15:48:49'), return_type='agg' ):
+                 beg_timestamp= pd.Timestamp('2018-01-01 15:48:49'), end_timestamp= pd.Timestamp('2025-12-31 15:48:49'), 
+                 agg_type='agg', return_type='styled' ):
     df = prep_comparison_df(main_summoner_name, db_engine, minutes_to_analyse = minutes_to_analyse) 
     cols=['gameCreationDate', 'role','championName_x','championName_y','winFlag_x','minute','cs_diff','xp_diff','gold_diff','dmg_diff']
 
@@ -99,7 +100,16 @@ def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_d
                 (df.gameCreationDate > beg_timestamp) &
                 (df.gameCreationDate < end_timestamp)][cols]
 
-    if return_type != 'agg':
+    if role == 'ALL ROLES':
+        processed_df = df[(df.summonerName_x==main_summoner_name) &
+                    (df.gameCreationDate > beg_timestamp) &
+                    (df.gameCreationDate < end_timestamp)][cols]
+    else:
+        processed_df = df[(df.summonerName_x==main_summoner_name) & (df.role==role) &
+                    (df.gameCreationDate > beg_timestamp) &
+                    (df.gameCreationDate < end_timestamp)][cols]    
+
+    if agg_type != 'agg':
         rename_dict_2 = {'championName_y':'Enemy_Champion', 'championName_x':'Champion', 'winFlag_x':'Win'}
         return processed_df.rename(columns=rename_dict_2).sort_values(by='gameCreationDate', ascending = False).reset_index(drop=True)
     else:
@@ -122,5 +132,9 @@ def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_d
                         'XP_Diff@14': "{:.0f}",
                         'Gold_Diff@14': "{:.0f}",
                         'DMG_Diff@14': "{:.0f}"}
-        return aggregated_df.style.format(format_dict)
+        if return_type == 'styled':
+            return aggregated_df.style.format(format_dict)
+        else:
+            return aggregated_df
+            
 
