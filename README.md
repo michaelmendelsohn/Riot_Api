@@ -1,7 +1,7 @@
 # Riot_Api
-Pulls and stores League of Legends data. Displays performance stats filterable by teammates & roles seen nowhere else. Video of Streamlit app demo [here](https://youtu.be/cHJTaFX9TmY.)
+Pulls and stores League of Legends data. Displays performance stats filterable by teammates & roles seen nowhere else. Video of Streamlit app demo [here](https://youtu.be/cHJTaFX9TmY).
 
-To run the streamlit app, open a command prompt, navigate to the folder with app.py, and rune the command 'streamlit run app.py'/
+To run the streamlit app, open a command prompt, navigate to the folder with app.py, and run the command streamlit run app.py
 ------------------------
  
 ![image](https://github.com/michaelmendelsohn/Riot_Api/assets/12532898/8cd56f0b-ccfb-4116-91be-15ce5d6a70ff)
