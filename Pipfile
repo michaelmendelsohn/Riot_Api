@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 oracledb = "*"
+cx-oracle = "*"
 
 [dev-packages]
 

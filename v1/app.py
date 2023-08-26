@@ -3,10 +3,10 @@ import os
 import mysql
 
 import analysis_functions as af 
-
+import pandas as pd
 import helper_functions as help
 import role_classification as rc
-
+import oracledb
 from riotwatcher import LolWatcher
 
 _RIOT_API_KEY='RGAPI-530dc2f5-6f18-414d-b0ac-0037d535622c'
@@ -14,6 +14,16 @@ lol_watcher = LolWatcher(_RIOT_API_KEY)
 engine = help.create_mysql_engine()
 
 st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layout = "wide")
+
+oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
+                        config_dir = "Riot_Api/v1/oracle_wallet",
+                        wallet_location = "Riot_Api/v1/oracle_wallet",
+                        wallet_password = "Iamnotgroot123")
+print(oracle_con)
+read_df = pd.read_sql('SELECT * FROM test_upload_table', oracle_con)
+display(read_df)
+st.write(read_df)
+
 
 # -- Header Section ----
 with st.container(): # this is optional
