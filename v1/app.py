@@ -16,15 +16,15 @@ engine = help.create_mysql_engine()
 st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layout = "wide")
 st.write(os.getcwd())
 
-# oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
-#                         config_dir = "Riot_Api/v1/oracle_wallet",
-#                         wallet_location = "Riot_Api/v1/oracle_wallet",
-#                         #config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
-#                         #wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
-#                         wallet_password = "Iamnotgroot123")
-# print(oracle_con)
-# read_df = pd.read_sql('SELECT * FROM test_upload_table', oracle_con)
-# st.write(read_df)
+oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
+                        config_dir = "/mount/src/riot_api/v1/oracle_wallet",
+                        wallet_location = "/mount/src/riot_api/v1/oracle_wallet",
+                        #config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
+                        #wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
+                        wallet_password = "Iamnotgroot123")
+print(oracle_con)
+read_df = pd.read_sql('SELECT * FROM test_upload_table', oracle_con)
+st.write(read_df)
 
 
 # -- Header Section ----
