@@ -14,7 +14,7 @@ lol_watcher = LolWatcher(_RIOT_API_KEY)
 engine = help.create_mysql_engine()
 
 st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layout = "wide")
-
+st.write(os.getcwd())
 oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
                         config_dir = "Riot_Api/v1/oracle_wallet",
                         wallet_location = "Riot_Api/v1/oracle_wallet",
