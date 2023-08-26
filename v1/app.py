@@ -17,8 +17,10 @@ st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layo
 st.write(os.getcwd())
 
 oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
+                        # location for streamlit directory
                         config_dir = "/mount/src/riot_api/v1/oracle_wallet",
                         wallet_location = "/mount/src/riot_api/v1/oracle_wallet",
+                        # location for local directory
                         #config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
                         #wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
                         wallet_password = "Iamnotgroot123")
