@@ -10,6 +10,7 @@ pandas = "*"
 numpy = "*"
 shapely = "*"
 sqlalchemy = "*"
+oracledb = "*"
 
 [dev-packages]
 
