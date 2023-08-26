@@ -18,10 +18,11 @@ st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layo
 oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
                         config_dir = "Riot_Api/v1/oracle_wallet",
                         wallet_location = "Riot_Api/v1/oracle_wallet",
+                        #config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
+                        #wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
                         wallet_password = "Iamnotgroot123")
 print(oracle_con)
 read_df = pd.read_sql('SELECT * FROM test_upload_table', oracle_con)
-display(read_df)
 st.write(read_df)
 
 
