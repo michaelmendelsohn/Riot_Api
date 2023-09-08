@@ -18,8 +18,8 @@ st.write(os.getcwd())
 #engine = help.create_mysql_engine()
 engine = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_high",
                         # location for streamlit directory
-                        config_dir = "/mount/src/riot_api/v1/oracle_wallet",
-                        wallet_location = "/mount/src/riot_api/v1/oracle_wallet",
+                        config_dir = "/app/riot_api/v1/oracle_wallet",
+                        wallet_location = "/app/riot_api/v1/oracle_wallet",
                         # location for local directory
                         #config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
                         #wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
