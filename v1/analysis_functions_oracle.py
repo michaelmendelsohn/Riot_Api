@@ -103,7 +103,7 @@ def stats_at_min_with_teammates(main_summoner_name, role, db_engine, teammates_d
                     (df.GAMECREATIONDATE > beg_timestamp) &
                     (df.GAMECREATIONDATE < end_timestamp)][cols]
     else:
-        processed_df = df[(df.SUMMONERNAME_x==main_summoner_name) & (df.role==role) &
+        processed_df = df[(df.SUMMONERNAME_x==main_summoner_name) & (df.ROLE==role) &
                     (df.GAMECREATIONDATE > beg_timestamp) &
                     (df.GAMECREATIONDATE < end_timestamp)][cols]    
 
