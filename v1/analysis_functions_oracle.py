@@ -23,10 +23,10 @@ def prep_comparison_df(summoner_name, db_engine, minutes_to_analyse = [10,14], t
         time.jungleMinionsKilled,
         time.minionsKilled + time.jungleMinionsKilled as totalCS,
         time.totalDamageDoneToChampions
-    FROM riot_api.lol_match_timeline time
-    INNER JOIN riot_api.lol_match_details det on time.matchId=det.matchId and time.participantId=det.participantId
-    INNER JOIN riot_api.lol_match_roles rol on rol.matchId=det.matchId and rol.participantId=det.participantId
-    INNER JOIN (select distinct matchid, teamName, LISTAGG(summonerName, '') as summonerNameList FROM riot_api.lol_match_details group by 1,2) summoner_basis
+    FROM lol_match_timeline time
+    INNER JOIN lol_match_details det on time.matchId=det.matchId and time.participantId=det.participantId
+    INNER JOIN lol_match_roles rol on rol.matchId=det.matchId and rol.participantId=det.participantId
+    INNER JOIN (select distinct matchid, teamName, LISTAGG(summonerName, '') as summonerNameList FROM lol_match_details group by 1,2) summoner_basis
                 on det.matchid = summoner_basis.matchid
 
     where rol.validRole = 1 and minute in ({minutes_where_sql}) and lower(summonerNameList) LIKE '%{summoner_name.lower()}%' 
