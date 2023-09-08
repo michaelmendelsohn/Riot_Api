@@ -14,8 +14,8 @@ lol_watcher = LolWatcher(_RIOT_API_KEY)
 
 
 st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layout = "wide")
-st.write(os.getcwd())
-#engine = help.create_mysql_engine()
+# st.write(os.getcwd())
+# engine = help.create_mysql_engine()
 engine = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_high",
                         # location for streamlit directory
                         config_dir = "/app/riot_api/v1/oracle_wallet",
