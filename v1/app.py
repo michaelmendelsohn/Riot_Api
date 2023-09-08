@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import mysql
 
-import analysis_functions as af 
+import analysis_functions_oracle as af 
 import pandas as pd
 import helper_functions as help
 import role_classification as rc
@@ -14,7 +14,7 @@ lol_watcher = LolWatcher(_RIOT_API_KEY)
 engine = help.create_mysql_engine()
 
 st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layout = "wide")
-st.write(os.getcwd())
+#st.write(os.getcwd())
 
 oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
                         # location for streamlit directory
@@ -24,9 +24,9 @@ oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn =
                         #config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
                         #wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
                         wallet_password = "Iamnotgroot123")
-print(oracle_con)
-read_df = pd.read_sql('SELECT * FROM test_upload_table', oracle_con)
-st.write(read_df)
+#print(oracle_con)
+#read_df = pd.read_sql('SELECT * FROM test_upload_table', oracle_con)
+#st.write(read_df)
 
 
 # -- Header Section ----
@@ -38,10 +38,11 @@ with st.container(): # this is optional
 #     with open(filename) as f:
 #         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 # local_css("../style/style.css")
-def display_stats(main_summoner_name, role, teammates_dict, return_type='agg'):
-    engine = help.create_mysql_engine()
+def display_stats(main_summoner_name, role, teammates_dict, agg_type='agg', return_type = 'styled'):
+    #engine = help.create_mysql_engine()
+    engine = oracle_con
     #stats_df = af.stats_at_min(summoner_name, role, engine)
-    stats_df = af.stats_at_min_with_teammates(main_summoner_name, role, engine, teammates_dict, return_type=return_type)
+    stats_df = af.stats_at_min_with_teammates(main_summoner_name, role, engine, teammates_dict, agg_type = agg_type, return_type=return_type)
     st.write(stats_df)
     return
 
@@ -107,4 +108,4 @@ with st.container():
 with st.container():
     st.write("---")
     st.subheader("Game by Game data for the above aggregated stats")
-    display_stats(summoner_name_0, role_0, teammates_dict, return_type='underlying')
+    display_stats(summoner_name_0, role_0, teammates_dict, agg_type='underlying')

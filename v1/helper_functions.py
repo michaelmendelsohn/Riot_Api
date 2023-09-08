@@ -4,6 +4,7 @@ import constants
 import pandas as pd
 from datetime import datetime
 import concurrent.futures
+import oracledb
 
 # Create mysql engine to be used to upload to my local mysql DB
 def create_mysql_engine (user = 'root', password = 'iamgroot482', port = '3306',
@@ -14,6 +15,25 @@ def create_mysql_engine (user = 'root', password = 'iamgroot482', port = '3306',
             )
     engine = create_engine(url)
     return engine
+
+def create_oracle_con(server_type = 'local'):
+    if server_type == 'local':
+        # location for local directory
+        cd = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
+        wl = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
+    else:
+        # location for streamlit directory
+        cd = "/mount/src/riot_api/v1/oracle_wallet",
+        wl = "/mount/src/riot_api/v1/oracle_wallet",
+    oracle_con = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_medium",
+            # location for streamlit directory
+            #config_dir = "/mount/src/riot_api/v1/oracle_wallet",
+            #wallet_location = "/mount/src/riot_api/v1/oracle_wallet",
+            # location for local directory
+            config_dir = cd,
+            wallet_location = wl,
+            wallet_password = "Iamnotgroot123")
+    return oracle_con
 
 # Get a list of all matches in riot API for a summoner. 
 # Riot API caps at 100 matches, so this runs multiple times to get the full list
