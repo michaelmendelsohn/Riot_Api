@@ -34,7 +34,7 @@ engine = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "ri
 with st.container(): # this is optional
     st.title ("Welcome to my page! We're gonna show you some cool stats about your League of Legends gameplay!" )
     st.subheader("Page created by me - Michael Mendelsohn - a Senior Data Analyst looking for my next role.")
-    st.write("To demo this page, try entering the Summoner Name 'SpicedCider', and clicking Go!.")
+    st.write("To demo this page, try entering the Summoner Name 'SpicedCider', and clicking Go!")
 # def local_css(filename):
 #     with open(filename) as f:
 #         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
