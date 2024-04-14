@@ -2,28 +2,30 @@ import streamlit as st
 import os
 import mysql
 
-import analysis_functions_oracle as af 
+#import analysis_functions_oracle as af 
+import analysis_functions as af 
+
 import pandas as pd
 import helper_functions as help
 import role_classification as rc
 import oracledb
 from riotwatcher import LolWatcher
 
-_RIOT_API_KEY='RGAPI-530dc2f5-6f18-414d-b0ac-0037d535622c'
+_RIOT_API_KEY='RGAPI-a1675f98-f863-4865-8179-df2510e492e2'
 lol_watcher = LolWatcher(_RIOT_API_KEY)
 
 
 st.set_page_config(page_title='Best Damn League App', page_icon = ':tada:', layout = "wide")
 # st.write(os.getcwd())
-# engine = help.create_mysql_engine()
-engine = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_high",
-                        # location for streamlit directory
-                        config_dir = "/app/riot_api/v1/oracle_wallet",
-                        wallet_location = "/app/riot_api/v1/oracle_wallet",
-                        # location for local directory
-                        #config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
-                        #wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
-                        wallet_password = "Iamnotgroot123")
+engine = help.create_mysql_engine()
+# engine = oracledb.connect(user = "admin", password = "Iamnotgroot123", dsn = "riotapidb_high",
+#                         # location for streamlit directory
+#                         # config_dir = "/app/riot_api/v1/oracle_wallet",
+#                         # wallet_location = "/app/riot_api/v1/oracle_wallet",
+#                         # location for local directory
+#                         config_dir = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
+#                         wallet_location = r"C:\Users\mmend\OneDrive\riot_api_git_clone_folder\Riot_Api\v1\oracle_wallet",
+#                         wallet_password = "Iamnotgroot123")
 
 #print(oracle_con)
 #read_df = pd.read_sql('SELECT * FROM test_upload_table', oracle_con)

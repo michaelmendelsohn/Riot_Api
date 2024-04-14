@@ -63,12 +63,16 @@ def classify_jungler(match_list_to_classify, db_engine):
 
 
 def classify_support(match_list_to_classify, db_engine):
-    current_supp_items = [ "Spellthief's Edge", 'Frostfang', 'Shard of True Ice',  'Steel Shoulderguards',
+    
+    season14_supp_items = ['World Atlas','Runic Compass','Bounty of Worlds',
+                           'Celestial Opposition','Dream Maker',"Zaz'Zak's Realmspike",'Solstice Sleigh','Bloodsong',]
+
+    before_season14_supp_items = [ "Spellthief's Edge", 'Frostfang', 'Shard of True Ice',  'Steel Shoulderguards',
                            'Runesteel Spaulders',  'Pauldrons of Whiterock',  'Relic Shield', "Targon's Buckler",
                            'Bulwark of the Mountain',  'Spectral Sickle', 'Harrowing Crescent', 'Black Mist Scythe']
     past_supp_items = ['Face of the Mountain', "Frost Queen's Claim", 'Eye of the Oasis', 'Eye of the Equinox',
                        'Talisman of Ascension', "Targon's Brace", 'Ancient Coin', "Nomad's Medallion"]
-    supp_items = [item.lower() for item in current_supp_items + past_supp_items]
+    supp_items = [item.lower() for item in season14_supp_items + before_season14_supp_items + past_supp_items]
 
     match_list_where_sql = "'" + "','".join([str(i) for i in match_list_to_classify]) + "'"
     #SQL needs 2 to pull with proper syntax

@@ -68,6 +68,8 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
         [match_info['participants'][i].pop('perks') for i in range(len(match_info['participants'])) if 'perks' in match_info['participants'][i].keys() ]
         #if 'challenges' in match_info['participants'][0].keys():
         [match_info['participants'][i].pop('challenges') for i in range(len(match_info['participants'])) if 'challenges' in match_info['participants'][i].keys()]
+        
+        [match_info['participants'][i].pop('styles') for i in range(len(match_info['participants'])) if 'styles' in match_info['participants'][i].keys()]
 
         #Turn the data into a DF format
         df = pd.DataFrame(data=match_info['participants'], columns = list(match_info['participants'][0].keys()))
@@ -95,9 +97,27 @@ def slurp_match_details(lol_watcher, match_id, region='na1'):
         df['summoner2Name'] = df['summoner2Id'].apply(str).map(spell_dict)
         df['queueName'] = df['queueId'].apply(str).map(queues_dict)
         
-        df.drop(columns=['allInPings', 'assistMePings', 'baitPings', 'basicPings', 'bountyLevel', 'championTransform', 'commandPings',
-                         'dangerPings', 'eligibleForProgression', 'enemyMissingPings', 'enemyVisionPings','getBackPings', 'holdPings',
-                         'needVisionPings', 'nexusKills', 'nexusLost', 'nexusTakedowns', 'onMyWayPings', 'visionClearedPings', 'pushPings'], inplace=True)
+
+        #cols_to_drop=['allInPings', 'assistMePings', 'baitPings', 'basicPings', 'bountyLevel', 'championTransform', 'commandPings',
+        #                 'dangerPings', 'eligibleForProgression', 'enemyMissingPings', 'enemyVisionPings','getBackPings', 'holdPings',
+        #                 'needVisionPings', 'nexusKills', 'nexusLost', 'nexusTakedowns', 'onMyWayPings', 'visionClearedPings', 'pushPings']
+
+        cols_to_keep = ['assists', 'baronKills', 'champExperience', 'champLevel', 'championId', 'championName', 'consumablesPurchased', 'damageDealtToBuildings', 'damageDealtToObjectives',
+                        'damageDealtToTurrets', 'damageSelfMitigated', 'deaths', 'detectorWardsPlaced', 'doubleKills', 'dragonKills', 'firstBloodAssist', 'firstBloodKill', 'firstTowerAssist',
+                        'firstTowerKill', 'gameEndedInEarlySurrender', 'gameEndedInSurrender', 'goldEarned', 'goldSpent', 'individualPosition', 'inhibitorKills', 'inhibitorTakedowns', 'inhibitorsLost',
+                        'item0', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'itemsPurchased', 'killingSprees', 'kills', 'lane', 'largestCriticalStrike', 'largestKillingSpree', 'largestMultiKill',
+                        'longestTimeSpentLiving', 'magicDamageDealt', 'magicDamageDealtToChampions', 'magicDamageTaken', 'neutralMinionsKilled', 'objectivesStolen', 'objectivesStolenAssists', 'participantId',
+                        'pentaKills', 'physicalDamageDealt', 'physicalDamageDealtToChampions', 'physicalDamageTaken', 'placement', 'playerAugment1', 'playerAugment2', 'playerAugment3', 'playerAugment4', 'playerSubteamId',
+                        'profileIcon', 'puuid', 'quadraKills', 'riotIdName', 'riotIdTagline', 'role', 'sightWardsBoughtInGame', 'spell1Casts', 'spell2Casts', 'spell3Casts', 'spell4Casts', 'subteamPlacement', 'summoner1Casts',
+                        'summoner1Id', 'summoner2Casts', 'summoner2Id', 'summonerId', 'summonerLevel', 'summonerName', 'teamEarlySurrendered', 'teamId', 'teamPosition', 'timeCCingOthers', 'timePlayed', 'totalAllyJungleMinionsKilled',
+                        'totalDamageDealt', 'totalDamageDealtToChampions', 'totalDamageShieldedOnTeammates', 'totalDamageTaken', 'totalEnemyJungleMinionsKilled', 'totalHeal', 'totalHealsOnTeammates', 'totalMinionsKilled', 'totalTimeCCDealt',
+                        'totalTimeSpentDead', 'totalUnitsHealed', 'tripleKills', 'trueDamageDealt', 'trueDamageDealtToChampions', 'trueDamageTaken', 'turretKills', 'turretTakedowns', 'turretsLost', 'unrealKills', 'visionScore', 'visionWardsBoughtInGame',
+                        'wardsKilled', 'wardsPlaced', 'win', 'matchId', 'region', 'gameDurationSeconds', 'gameCreationDate', 'queueId', 'winFlag', 'teamName', 'item1Name', 'item2Name', 'item3Name', 'item4Name', 'item5Name', 'item6Name', 'summoner1Name',
+                        'summoner2Name', 'queueName', 'item0Name']
+
+        cols_to_drop=[i for i in df.columns if i not in cols_to_keep]
+
+        df.drop(columns= cols_to_drop, inplace=True)
         return df
 
 # Create DataFrame of Match Timeline Data for specified Match Id
@@ -173,8 +193,11 @@ def collect_riot_api_data(summoner_name, lol_watcher, table_name, db_engine, reg
     def worker (match_id):
         df_to_upload = slurp_data(lol_watcher, match_id, table_name, region=region)
         if df_to_upload is not None:
-            df_to_upload.to_sql(con=db_engine, name=table_name, if_exists='append', index = False)
-            print(f"Uploaded match id {match_id} {table_name} data.")
+            try:
+                df_to_upload.to_sql(con=db_engine, name=table_name, if_exists='append', index = False)
+                print(f"Uploaded match id {match_id} {table_name} data.")
+            except Exception as e:
+                print(f"Can't upload match id {match_id} {table_name} data. Exception {e}")
         else: 
             print(f'Match id {match_id} returns None.')
 
